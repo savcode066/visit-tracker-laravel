@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  php-apache:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html/
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: visit_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: visit_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./visits.sql:/docker-entrypoint-initdb.d/visits.sql
+    ports:
+      - "3306:3306"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - mysql
+    environment:
+      # Optional: Configure MySQL as a data source in Grafana
+      # GF_DATABASE_TYPE: mysql
+      # GF_DATABASE_HOST: mysql:3306
+      # GF_DATABASE_NAME: visit_db
+      # GF_DATABASE_USER: root
+      # GF_DATABASE_PASSWORD: root
+      GF_INSTALL_PLUGINS: mysql
+
+volumes:
+  mysql_data:
+  grafana_data: 

@@ -1,0 +1,7 @@
+CREATE TABLE visits (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip VARCHAR(255),
+    page VARCHAR(255),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+); 
